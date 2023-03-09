@@ -13,17 +13,25 @@ getList.getDepartmentsFromList = async function(){
 };
 
 getList.getEmployeesList = async function(){
-    return await Employees.findAll({attributes:["name"]});
+    return await Employees.findAll({attributes:["firstName", "lastName"]});
 };
 
 getList.getEmployeesFromList = async function(){
-    const employees = await getList.getEmployeeList();
-    const values = employees.map(x=>x.name);
+    const employees = await getList.getEmployeesList();
+    const values = employees.map(Createname);
     return values;
 };
 
-getList.getRolesList = async function(){
-    return await Roles.findAll({attributes:['name']});
+function Createname(entity){
+    return `${entity.firstName} ${entity.lastName}`;
 }
 
-getList.getRolesFromList
+getList.getRolesList = async function(){
+    return await Roles.findAll({attributes:['title']});
+}
+
+getList.getRolesFromList = async function(){
+    const roles = await getList.getRolesList();
+    const values = roles.map(x=>x.title);
+    return values;
+}

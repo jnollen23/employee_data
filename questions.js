@@ -61,11 +61,15 @@ const questions = async function (index) {
         [
             {
                 name: "updateEmployee-1",
-                message: "What is their new Role",
+                message: "Select the employee to update",
+                type:'list',
+                choices: await getList.getEmployeesFromList()
             },
             {
-                name: "updateEmployee-1",
+                name: "updateEmployee-2",
                 message: "What is their new Role",
+                type:'list',
+                choices: await getList.getRolesFromList()
             },
         ],
     ];

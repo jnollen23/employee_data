@@ -16,7 +16,7 @@ Employees.init(
             allowNull:false
         },
         lastName:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.STRING,
             allowNull:false
         },
         title:{

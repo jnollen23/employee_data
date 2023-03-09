@@ -22,8 +22,8 @@ const departments = [
     },
 ];
 
-const createDepartments = function(){
-    Departments.bulkCreate(departments);
+const createDepartments = async function(){
+    await Departments.bulkCreate(departments);
 }
 
 module.exports = createDepartments;
