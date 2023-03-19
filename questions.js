@@ -6,8 +6,8 @@ const questions = async function (index) {
             {
                 name: "initial",
                 message: "What would you like to do?",
-                type:"list",
-                choices:[
+                type: "list",
+                choices: [
                     "View all departments",
                     "View all roles",
                     "View all employees",
@@ -26,17 +26,17 @@ const questions = async function (index) {
         ],
         [
             {
-                name: "addRoll-1",
+                name: "addRole-1",
                 message: "What is the Title",
             },
             {
-                name: "addRoll-2",
+                name: "addRole-2",
                 message: "What is the Department",
-                type:'list',
+                type: 'list',
                 choices: await getList.getDepartmentsFromList()
             },
             {
-                name: "addRoll-3",
+                name: "addRole-3",
                 message: "What is the Salary",
             },
         ],
@@ -52,6 +52,8 @@ const questions = async function (index) {
             {
                 name: "addEmployee-3",
                 message: "What is their Role",
+                type: 'list',
+                choices: await getList.getRolesFromList(),
             },
             {
                 name: "addEmployee-4",
@@ -62,13 +64,13 @@ const questions = async function (index) {
             {
                 name: "updateEmployee-1",
                 message: "Select the employee to update",
-                type:'list',
+                type: 'list',
                 choices: await getList.getEmployeesFromList()
             },
             {
                 name: "updateEmployee-2",
                 message: "What is their new Role",
-                type:'list',
+                type: 'list',
                 choices: await getList.getRolesFromList()
             },
         ],
