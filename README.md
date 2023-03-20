@@ -12,6 +12,9 @@ You can use this application to create a company flow chart stored in a database
 ## How to use
 After following the installation just follow the onscreen questions.
 
+## Demo
+![Demo Video](./Demo Video)
+
 ## Credits
 N/A
 
