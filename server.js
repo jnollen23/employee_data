@@ -9,17 +9,56 @@ sequelize.sync({ force: false });
 
 async function viewAllDepartments() {
     const depts = await Departments.findAll();
+    /* console.log("Company Departments");
+    console.log("| ID |     Department     |");
+    console.log('---------------------------')
     depts.forEach(x => {
-        console.log(x.name);
+        console.log(`| ${x.id.toString().padEnd(2)} | ${x.name.padEnd(19, ' ')}|`);
+    }) */
+    const table = depts.map(x=>{
+        return{
+            ID: x.id,
+            Department: x.name
+        }
     })
+    console.table(table);
     askFirstQuestion();
 }
 
 async function viewAllEmployees() {
-    const depts = await Employees.findAll();
+    const depts = await Employees.findAll({
+        include: [{
+            model: Employees,
+        }, {
+
+            model: Roles,
+            required: true,
+
+        }]
+    });/* 
+    console.log("Company Employees");
+    console.log("| ID |       First Name       |        Last Name       |        Title        |          Manager          |");
+    console.log('----------------------------------------------------------------------------------------------------------')
     depts.forEach(x => {
-        console.log(`${x.firstName} ${x.lastName}`);
-    })
+        if (x.manager != null) {
+            console.log(`| ${x.id.toString().padEnd(2, ' ')} | ${x.firstName.padEnd(23, ' ')}| ${x.lastName.padEnd(23, ' ')}| ${x.roles[0].title.padEnd(20, ' ')}| ${(x.employee.firstName + ' ' + x.employee.lastName).padEnd(26, " ")}|`);
+        }
+        else {
+
+            console.log(`| ${x.id.toString().padEnd(2, ' ')} | ${x.firstName.padEnd(23, ' ')}| ${x.lastName.padEnd(23, ' ')}| ${x.roles[0].title.padEnd(20, ' ')}|                           |`);
+        }
+    }) */
+    const table = depts.map(x=>{
+        const manager = (x.manager === null)? "":`${x.employee.firstName} ${x.employee.lastName}`;
+        return {
+            ID: x.id,
+            First_Name: x.firstName,
+            Last_Name: x.lastName,
+            Title: x.roles[0].title,
+            Manager: manager,
+        }
+    });
+    console.table(table);
     askFirstQuestion();
 }
 
@@ -30,9 +69,21 @@ async function viewAllRoles() {
             required: true,
         }]
     });
+    /* console.log("Company Titles");
+    console.log("| ID |        Title         |     Department     |     Salary     |");
+    console.log('-------------------------------------------------------------------')
     depts.forEach(x => {
-        console.log(x.title, x.departments[0].name);
-    })
+        console.log(`| ${x.id.toString().padEnd(2, ' ')} | ${x.title.padEnd(21, ' ')}| ${x.departments[0].name.padEnd(19, ' ')}| ${x.salary.toString().padEnd(15, ' ')}|`);
+    }) */
+    const table = depts.map(x=>{
+        return {
+            ID: x.id,
+            Title: x.title,
+            Department: x.departments[0].name,
+            Salary: x.salary
+        }
+    });
+    console.table(table);
     askFirstQuestion();
 }
 
@@ -113,11 +164,13 @@ async function addEmployee() {
     else {
         const title = await Roles.findOne({ where: { title: employee.title } });
         employee.title = title.id;
-        if (employee.manager.length > 0) {
+        if (employee.manager === "None") {
+            employee.manager = null;
+        }
+        else {
             const manager = await Employees.findOne({ where: { firstName: employee.manager.split(' ')[0], lastName: employee.manager.split(' ')[1] } });
             employee.manager = manager.id;
         }
-        else employee.manager = null;
 
         await Employees.create(employee);
         console.log("New employee was entered successfully");
@@ -125,17 +178,17 @@ async function addEmployee() {
     askFirstQuestion();
 }
 
-async function updateEmployee(){
+async function updateEmployee() {
     const response = await inquirer.prompt(await questions(4));
     const employee = {
         firstName: response["updateEmployee-1"].split(' ')[0],
         lastName: response["updateEmployee-1"].split(' ')[1],
         title: response["updateEmployee-2"],
     }
-    const title = await Roles.findOne({where:{title: employee.title}});
+    const title = await Roles.findOne({ where: { title: employee.title } });
     employee.title = title.id;
 
-    await Employees.update(employee, {where:{firstName: employee.firstName, lastName:employee.lastName}});
+    await Employees.update(employee, { where: { firstName: employee.firstName, lastName: employee.lastName } });
     console.log("Successfully updated employee Role");
 
     askFirstQuestion();
@@ -176,6 +229,16 @@ async function askFirstQuestion() {
 }
 
 function initiateConsole() {
+    console.log(` 
+    /$$$$$$                        /$$                 /$$              /$$                      
+    /$$__  $$                      | $$                | $$             | $$                      
+   | $$  \\ $$  /$$$$$$   /$$$$$$$ /$$$$$$    /$$$$$$  /$$$$$$  /$$$$$$$$| $$   /$$  /$$$$$$       
+   | $$$$$$$$ /$$__  $$ /$$_____/ |_ $$_/   /$$__  $$|_  $$_/ |____ /$$/| $$  /$$/ |____  $$      
+   | $$__  $$| $$  \\__/|  $$$$$$   | $$    | $$  \\ $$  | $$      /$$$$/ | $$$$$$/   /$$$$$$$      
+   | $$  | $$| $$       \\____  $$  | $$ /$$| $$  | $$  | $$ /$$ /$$__/  | $$_  $$  /$$__  $$      
+   | $$  | $$| $$       /$$$$$$$/  |  $$$$/|  $$$$$$/  |  $$$$//$$$$$$$$| $$ \\  $$|  $$$$$$$      
+   |__/  |__/|__/      |_______/    \\___/   \\______/    \\___/ |________/|__/  \\__/ \\_______/                                                                                                        
+                                                                       `)
     console.log("Welcome to the Employee Database for the Great Arstotzka");
     askFirstQuestion();
 }

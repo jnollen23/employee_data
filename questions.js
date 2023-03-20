@@ -58,6 +58,8 @@ const questions = async function (index) {
             {
                 name: "addEmployee-4",
                 message: "Who is their Manager",
+                type: 'list',
+                choices: await getList.getManagersFromList(),
             },
         ],
         [

@@ -22,6 +22,12 @@ getList.getEmployeesFromList = async function(){
     return values;
 };
 
+getList.getManagersFromList = async function(){
+    const values = await getList.getEmployeesFromList();
+    values[values.length] = "None"
+    return values;
+}
+
 function Createname(entity){
     return `${entity.firstName} ${entity.lastName}`;
 }

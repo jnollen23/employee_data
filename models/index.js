@@ -14,7 +14,8 @@ Departments.belongsTo(Roles, {
 
 Employees.hasMany(Roles, {
     foreignKey: 'id',
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE',
+    sourceKey:'title'
 });
 Roles.belongsTo(Employees, {
     foreignKey: 'id',
@@ -23,10 +24,13 @@ Roles.belongsTo(Employees, {
 
 Employees.hasMany(Employees, {
     foreignKey: 'id',
-    onDelete: "CASCADE"
+    onDelete: "CASCADE",
+    sourceKey:'manager',
+    as:'employee-manager'
+
 })
 Employees.belongsTo(Employees, {
-    foreignKey: 'id',
+    foreignKey: 'manager',
     targetKey: 'id'
 })
 
